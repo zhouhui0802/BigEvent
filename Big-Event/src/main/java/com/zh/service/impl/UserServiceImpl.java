@@ -3,6 +3,7 @@ package com.zh.service.impl;
 import com.zh.mapper.UserMapper;
 import com.zh.pojo.User;
 import com.zh.service.UserService;
+import com.zh.utils.Md5Util;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -20,7 +21,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void registerUser(String username, String password) {
-
-        userMapper.registerUser(username, password);
+        final String md5String= Md5Util.getMD5String(password);
+        userMapper.registerUser(username, md5String);
     }
 }
