@@ -2,6 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/Big-Event.iml" filepath="$PROJECT_DIR$/Big-Event.iml" />
       <module fileurl="file://$PROJECT_DIR$/NoUpdateProject.iml" filepath="$PROJECT_DIR$/NoUpdateProject.iml" />
     </modules>
   </component>
