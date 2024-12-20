@@ -3,13 +3,15 @@ package com.zh.controller;
 import com.zh.pojo.Result;
 import com.zh.pojo.User;
 import com.zh.service.UserService;
+import com.zh.utils.JwtUtil;
 import com.zh.utils.Md5Util;
 import jakarta.validation.constraints.Pattern;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.HashMap;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/user")
@@ -41,9 +43,27 @@ public class UserController {
         }
 
         if(Md5Util.getMD5String(password).equals(loginUser.getPassword())){
-            return Result.success("jwt token is ok");
+
+/*            System.out.println(password);
+            System.out.println(Md5Util.getMD5String(password));
+            System.out.println(loginUser.getPassword());*/
+            Map<String,Object> claims=new HashMap<>();
+            claims.put("id",loginUser.getId());
+            claims.put("username",loginUser.getUsername());
+            String token= JwtUtil.getToken(claims);
+            return Result.success(token);
         }
 
         return Result.error("the password is wrong");
+    }
+
+    @GetMapping("/userInfo")
+    public Result<User> userInfo(@RequestHeader(name="Authorization") String token){
+
+        Map<String,Object> map=JwtUtil.parseToken(token);
+        String username=(String)map.get("username");
+
+        User user=userService.findByUserName(username);
+        return Result.success(user);
     }
 }

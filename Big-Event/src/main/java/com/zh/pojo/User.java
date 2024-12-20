@@ -2,6 +2,7 @@ package com.zh.pojo;
 
 import java.time.LocalDateTime;
 import lombok.Data;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Data
 public class User {
@@ -10,6 +11,7 @@ public class User {
 
     private String username;
 
+    @JsonIgnore
     private String password;
 
     private String nickname;

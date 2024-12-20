@@ -69,4 +69,8 @@ public class Md5Util {
         stringbuffer.append(c0);
         stringbuffer.append(c1);
     }
+
+    public static void main(String args[]){
+        System.out.println(Md5Util.getMD5String("123456"));
+    }
 }
