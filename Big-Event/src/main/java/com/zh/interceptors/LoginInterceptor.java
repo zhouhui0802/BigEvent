@@ -1,6 +1,7 @@
 package com.zh.interceptors;
 
 import com.zh.utils.JwtUtil;
+import com.zh.utils.ThreadLocalUtil;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.stereotype.Component;
@@ -19,6 +20,9 @@ public class LoginInterceptor implements HandlerInterceptor {
         try{
             Map<String,Object> claims = JwtUtil.parseToken(token);
 
+
+            ThreadLocalUtil.set(claims);
+
             return true;
         }catch(Exception e){
             response.setStatus(401);
@@ -29,6 +33,7 @@ public class LoginInterceptor implements HandlerInterceptor {
 
     @Override
     public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) throws Exception {
-        HandlerInterceptor.super.afterCompletion(request, response, handler, ex);
+
+        ThreadLocalUtil.remove();
     }
 }
