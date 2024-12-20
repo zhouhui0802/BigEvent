@@ -9,6 +9,7 @@ import com.zh.utils.ThreadLocalUtil;
 import jakarta.validation.constraints.Pattern;
 import org.hibernate.validator.constraints.URL;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.StringUtils;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -81,5 +82,32 @@ public class UserController {
     public Result updateAvatar(@RequestParam @URL String avatarUrl){
         userService.updateAvatar(avatarUrl);
         return Result.success("update success");
+    }
+
+    @PatchMapping("/updatePwd")
+    public Result updatePwd(@RequestBody Map<String,String> params){
+
+        String oldPwd=params.get("old_pwd");
+        String newPwd=params.get("new_pwd");
+        String rePwd=params.get("re_pwd");
+
+        if(!StringUtils.hasLength(oldPwd)||!StringUtils.hasLength(newPwd)||!StringUtils.hasLength(rePwd)){
+            return Result.error("lost of necessary data");
+        }
+
+        Map<String,Object> map=ThreadLocalUtil.get();
+        String username=(String)map.get("username");
+        User loginUser=userService.findByUserName(username);
+
+        if(!loginUser.getPassword().equals(Md5Util.getMD5String(oldPwd))){
+            return Result.error("original password was wrong");
+        }
+
+        if(!rePwd.equals(newPwd)){
+            return Result.error("the new password is different twice");
+        }
+
+        userService.updatePwd(newPwd);
+        return Result.success("update password success");
     }
 }
