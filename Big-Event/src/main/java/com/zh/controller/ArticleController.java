@@ -1,11 +1,12 @@
 package com.zh.controller;
 
+import com.zh.pojo.Article;
 import com.zh.pojo.Result;
+import com.zh.service.ArticleService;
 import jakarta.servlet.http.HttpServletResponse;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -14,17 +15,12 @@ import java.util.Map;
 @RequestMapping("/article")
 public class ArticleController {
 
-    @GetMapping("/list")
-    public Result<String> list(/*@RequestHeader(name="Authorization") String token, HttpServletResponse response*/){
+    @Autowired
+    private ArticleService articleService;
 
-/*        try{
-            Map<String,Object> claims = new HashMap<String,Object>();
-            return Result.success("all the article data...");
-        }catch(Exception e){
-            response.setStatus(401);
-            return Result.error("not login");
-        }*/
-
-        return Result.success("all the article data...");
+    @PostMapping
+    public Result add(@RequestBody @Validated Article article) {
+        articleService.add(article);
+        return Result.success();
     }
 }
